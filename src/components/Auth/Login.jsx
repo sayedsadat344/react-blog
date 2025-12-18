@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'; 
 import { useForm } from 'react-hook-form';
-import authService from '../appwrite/auth';
-import { login as authLogin } from '../store/authSlice';
 
-import Input from './Input';
-import Button from './Button';
+import { login as authLogin } from '../../store/authSlice';
+
+
+import authService from '../../appwrite/auth';
+import Input from '../Elements/Input';
+import Button from '../Elements/Button';
 
 function Login() {
     console.log("🚀 Login component RENDERED");

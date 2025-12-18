@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import Input from './Input'
-import Button from './Button'
-import authService from '../appwrite/auth';
-import { login } from '../store/authSlice';
+
+
+
+import { login } from '../../store/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import Input from '../Elements/Input';
+import Button from '../Elements/Button';
+import authService from '../../appwrite/auth';
 
 function Signup() {
   
@@ -22,16 +25,9 @@ function Signup() {
             const userData =  await authService.createAccount(data);
 
             if(userData){
-
-              console.log("User data: ",userData);
-              
                 const loggedInUser = authService.getCurrentUser();
-
-                console.log("loggedInUser data: ",loggedInUser);
-
                 if(loggedInUser){
                     dispatch(login(loggedInUser));
-
                     navigate("/");
                 }
                 
@@ -39,7 +35,6 @@ function Signup() {
         } catch (error) {
 
             console.log("Error: ",error?.message);
-            
             setError(error?.message);
             throw error;
         }

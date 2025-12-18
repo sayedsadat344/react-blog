@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import dbService from '../appwrite/db'
+import dbService from '../../appwrite/db';
+
 
 
 

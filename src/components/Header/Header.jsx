@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Button from "../Button";
-import Logo from "../Logo";
+import Button from "../Elements/Button";
+import Logo from "./Logo";
 import Logout from "./Logout";
 
 

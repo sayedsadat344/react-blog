@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Container } from '../components'
+
 import { useSelector } from 'react-redux' // Added
 import { Link } from 'react-router-dom' // Added for navigation
 
-import PostCard from '../components/PostCard' // Added missing import
+
 import dbService from '../appwrite/db'
+import { Container, PostCard } from '../components'
 
 function HomePage() {
     const [posts, setPosts] = useState([])

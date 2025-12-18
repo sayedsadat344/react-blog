@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Button, Input, RTE, Select } from './index'
-import dbService from '../appwrite/db';
+import { Button, Input, RTE, Select } from '../index'
+import dbService from '../../appwrite/db';
 
 function PostForm({ post }) {
 
