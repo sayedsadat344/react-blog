@@ -1,8 +1,10 @@
 import { useState } from "react";
 
-import { Logout, Logo, Container, Button } from '../index'
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Button from "../Button";
+import Logo from "../Logo";
+import Logout from "./Logout";
 
 
 export default function Header() {
@@ -83,7 +85,7 @@ export default function Header() {
                     Dashboard
                   </Link>
                   <hr />
-                  <Logout />
+                  <Logout classes='block px-4 py-2 text-sm hover:bg-slate-100'/>
                 </div>
               )}
             </div>

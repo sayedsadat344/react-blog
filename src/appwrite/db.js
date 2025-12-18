@@ -54,7 +54,7 @@ export class DbService{
     }
 
 
-    async getPostBySlug({slug}){
+    async getPostBySlug(slug){
         try {
             return await this.databases.getDocument(config.appwriteDatabaseId,config.appwriteCollectionId,slug);
         } catch (error) {
@@ -88,7 +88,7 @@ export class DbService{
 
     async uploadFile(file){
         try {
-            return await this.bucket.createFile(config.appwriteBucketId,ID.unique,file);
+            return await this.bucket.createFile(config.appwriteBucketId,"unique()",file);
         } catch (error) {
             throw error;
         }
@@ -105,7 +105,9 @@ export class DbService{
 
 
     async getFilePreview(fileId){
-        return this.bucket.getFilePreview(config.appwriteBucketId,fileId);
+        // return await this.bucket.getFilePreview(config.appwriteBucketId,fileId);
+
+        return this.bucket.getFileView(config.appwriteBucketId, fileId);
     }
 
     async getFileById(fileId){

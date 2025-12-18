@@ -1,37 +1,32 @@
-import React, { forwardRef, useId } from 'react'
+import React, { forwardRef, useId } from "react";
 
+const Input = forwardRef(function Input(
+  { label, type = "text", classes = "", ...props },
+  ref
+) {
+  const id = useId();
 
-const Input = forwardRef(({
-    label,
-    type = 'text',
-    classes = '',
-    ...props
-}, ref) => {
+  return (
+    <div className="w-full">
+      {label && (
+        <label
+          className="block text-sm font-medium text-slate-700 mb-1"
+          htmlFor={id}
+        >
+          {label}
+        </label>
+      )}
 
-    const id = useId();
-
-    return (
-        <div className='w-full'>
-            {
-                label && <label className='block text-sm font-medium text-slate-700 mb-1' htmlFor={id}>{label}</label>
-            }
-
-            <Input type={type}
-        
-                className={`w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${classes}`}
-                {...props}
-                ref={ref}
-                id={id}
-            />
-
-        </div>
-    )
-
+      {/* ✅ THIS MUST BE lowercase input */}
+      <input
+        type={type}
+        className={`w-full px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${classes}`}
+        ref={ref}
+        id={id}
+        {...props}
+      />
+    </div>
+  );
 });
 
-
-
-
-
-
-export default Input
+export default Input;

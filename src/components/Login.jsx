@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
-import Input, { Button } from './index'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react' 
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'; 
 import { useForm } from 'react-hook-form';
 import authService from '../appwrite/auth';
 import { login as authLogin } from '../store/authSlice';
-import { logout } from '../store/authSlice';
+
+import Input from './Input';
+import Button from './Button';
 
 function Login() {
-
+    console.log("🚀 Login component RENDERED");
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -16,27 +17,35 @@ function Login() {
     const [error, setError] = useState(null);
 
 
-    const login = async () => {
+
+    const login = async (data) => {
+        console.log("📝 Data in login: ", data);
+
         setError("");
         try {
+        
             const session = await authService.login(data);
 
             if (session) {
                 const userData = await authService.getCurrentUser();
-                if(userData) {
-                    this.dispatch(authLogin(userData));
-                    this.navigate("/");
-                }else{
-                    this.dispatch(logout());
+                console.log("👤 User data received:", userData);
+
+                if (userData) {
+                    console.log("✅ Dispatching authLogin...");
+                    dispatch(authLogin(userData));
+                    console.log("✅ Navigating to /");
+                    navigate("/");
                 }
             }
 
         } catch (error) {
-            setError(error);
-            console.log("Error: ", error);
-
+            console.log("❌ Login Error: ", error);
+            setError(error.message || "Login failed");
         }
     }
+
+
+    
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
@@ -55,36 +64,51 @@ function Login() {
                 {/* Form */}
                 <form className="space-y-5" onSubmit={handleSubmit(login)}>
 
-                    {/* Username */}
+                    {/* Email Input */}
                     <div>
-                        <Input type="email" label="Username" placeholder="Enter your username" {...register("email",{
-                            required:true,
-                            validate:{
-                                matchPattern: (value) => /[a-z0-9]+[_a-z0-9\.-]*[a-z0-9]+@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})/.test(value) ||
-                                "Email address must be valid!",
-                            }
-                        })} />
+                        <Input
+                            type="email"
+                            label="Email"
+                            placeholder="Enter your email"
+                            {...register("email", {
+                                required: true,
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: "Invalid email address"
+                                }
+                            })}
+                        />
                     </div>
 
                     {/* Password */}
                     <div>
-                        <Input type="password" label="Password" placeholder="Enter your password" {...register("password",{
-                            required:true,
-                        })}/>
+                        <Input
+                            type="password"
+                            label="Password"
+                            placeholder="Enter your password"
+                            {...register("password", {
+                                required: true,
+                                minLength: {
+                                    value: 6,
+                                    message: "Password must be at least 6 characters"
+                                }
+                            })}
+                        />
                     </div>
 
                     {/* Login Button */}
-
-                    <Button type='submit' classes='w-full bg-indigo-600 text-white  hover:bg-indigo-700 transition'>
+                    <Button
+                        type='submit'
+                        classes='w-full bg-indigo-600 text-white hover:bg-indigo-700 transition'
+                    >
                         Log In
                     </Button>
-
 
                 </form>
 
                 {/* Footer */}
                 <p className="text-center text-sm text-slate-600 mt-6">
-                    Don’t have an account?{" "}
+                    Don't have an account?{" "}
                     <Link
                         to="/signup"
                         className="text-indigo-600 font-medium hover:underline"
@@ -92,12 +116,15 @@ function Login() {
                         Sign Up
                     </Link>
                 </p>
+
+                {/* Error Display */}
+                {error && (
+                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded">
+                        <p className='text-red-600 text-sm text-center'>{error}</p>
+                    </div>
+                )}
             </div>
-
-
-            {error && <p className='text-red-500 text-center'>{error}</p>}
         </div>
-
     )
 }
 
