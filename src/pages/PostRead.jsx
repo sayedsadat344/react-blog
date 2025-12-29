@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../components";
 import parse from "html-react-parser";
 import dbService from "../appwrite/db";
+import { removePost } from "../store/postSlice";
 
 function PostRead() {
  
@@ -16,6 +17,8 @@ function PostRead() {
   const [imageUrl,setImageUrl] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
+  const dispatch = useDispatch();
 
   const { slug } = useParams();
   const isAuthor = post && user && post.userId === user.$id;
@@ -65,6 +68,8 @@ function PostRead() {
 
     await dbService.deletePost(post.$id);
     await dbService.deleteFile(post.featuredImage);
+
+    dispatch(removePost(post));
 
     navigate("/");
   };

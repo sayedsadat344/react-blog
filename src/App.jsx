@@ -12,7 +12,11 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    authService.getCurrentUser()
+
+    const token = localStorage.getItem("auth_token");
+
+    if(token){
+      authService.getCurrentUser()
       .then((userData) => {
         if (userData) {
           dispatch(login({ userData }))
@@ -21,6 +25,13 @@ function App() {
         }
       })
       .finally(() => setLoading(false))
+    }else{
+      dispatch(logout())
+    }
+
+    
+
+   
   }, [])
 
   if (loading) {

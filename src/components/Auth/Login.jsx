@@ -28,7 +28,16 @@ function Login() {
         
             const session = await authService.login(data);
 
+            console.log("👤 session:", session);
+
             if (session) {
+
+                const token = await authService.getJWT();
+
+                console.log("👤 token:", token);
+
+                localStorage.setItem("auth_token",token.jwt);
+
                 const userData = await authService.getCurrentUser();
                 console.log("👤 User data received:", userData);
 

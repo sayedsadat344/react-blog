@@ -1,24 +1,38 @@
 import React, { useEffect, useState } from 'react'
 
-import { useSelector } from 'react-redux' // Added
-import { Link } from 'react-router-dom' // Added for navigation
+import { useSelector,useDispatch } from 'react-redux' 
+import { Link } from 'react-router-dom' 
+import { setPosts } from '../store/postSlice';
 
 
 import dbService from '../appwrite/db'
 import { Container, PostCard } from '../components'
 
 function HomePage() {
-    const [posts, setPosts] = useState([])
-    const [loading, setLoading] = useState(true) // Added loading state
-    const [error, setError] = useState(null) // Added error state
+    const [posts, setPostsList] = useState([])
+    const [loading, setLoading] = useState(true) 
+    const [error, setError] = useState(null)
+
+    const dispatch = useDispatch();
 
     // Get authentication status from Redux
     const authStatus = useSelector((state) => state.auth.status)
 
+    const cachedPosts = useSelector((state) => state.posts.list);
+
+
+
     useEffect(() => {
+
+
+        console.log("cachedPosts: ",cachedPosts);
+
+
         const fetchPosts = async () => {
             try {
 
+                console.log("The API runnin.....");
+                
                 setError(null)
 
                 // Check if user is authenticated before fetching posts
@@ -26,25 +40,35 @@ function HomePage() {
                     const res = await dbService.getAllPostsByQuery([])
 
                     if (res && res.documents) {
-                        setPosts(res.documents)
+
+                        dispatch(setPosts(res.documents));
+                        setPostsList(res.documents)
                     } else {
-                        setPosts([]) // Set empty array if no posts
+                        setPostsList([]) 
                     }
                 } else {
-                    setPosts([]) // Empty posts if not authenticated
+                    setPostsList([]) // Empty posts if not authenticated
                 }
             } catch (error) {
                 console.error('Error fetching posts:', error)
                 setError('Failed to load posts. Please try again later.')
-                setPosts([])
+                setPostsList([])
             } finally {
                 setLoading(false)
             }
         }
 
-        fetchPosts()
-    }, [authStatus]) // Added authStatus as dependency
 
+        if(cachedPosts.length == 0){
+            fetchPosts()
+        }else{
+            setPostsList(cachedPosts);
+            setLoading(false);
+        }
+        
+
+       
+    }, [authStatus])
     // Show loading state
     if (loading) {
         return (

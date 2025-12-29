@@ -22,16 +22,29 @@ function Signup() {
     const signUp = async(data) =>{
         setError("");
         try {
-            const userData =  await authService.createAccount(data);
+            await authService.createAccount(data).then((res) => {
+              console.log("The sign up navigate: ",res);
+            
 
-            if(userData){
-                const loggedInUser = authService.getCurrentUser();
-                if(loggedInUser){
-                    dispatch(login(loggedInUser));
-                    navigate("/");
-                }
-                
-            }
+              if(res){
+  
+                  const loggedInUser = authService.getCurrentUser();
+  
+                  console.log("The sloggedInUser: ",loggedInUser);
+                  if(loggedInUser){
+                      dispatch(login(loggedInUser));
+                      navigate("/");
+                  }else{
+                    navigate("/login");
+                  }
+                  
+              }
+            }).catch((error) => {
+              console.log("Error: ",error?.message);
+            setError(error?.message);
+            });
+
+           
         } catch (error) {
 
             console.log("Error: ",error?.message);

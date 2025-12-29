@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button, Input, RTE, Select } from '../index'
 import dbService from '../../appwrite/db';
+import { addPost, updatePost } from '../../store/postSlice';
 
 function PostForm({ post }) {
 
 
+    const dispatch = useDispatch();
 
     const [imageUrl, setImageUrl] = useState(null);
     const [localPreview, setLocalPreview] = useState(null);
@@ -85,15 +87,23 @@ function PostForm({ post }) {
                 }
 
 
-                const updatePost = await dbService.updatePost(post.$id, {
+                const updatedPost = await dbService.updatePost(post.$id, {
                     title: data.title,
                     content: data.content,
                     status: data.status,
                     featuredImage: featuredImageId,
                 });
 
-                if (updatePost) {
-                    navigate(`/post/${updatePost.$id}`);
+
+                console.log("Before : ",updatedPost);
+                
+                dispatch(updatePost(updatedPost));
+
+                console.log("After ");
+                
+
+                if (updatedPost) {
+                    navigate(`/post/${updatedPost.$id}`);
                 }
 
 
@@ -113,7 +123,10 @@ function PostForm({ post }) {
                     userId: userData?.$id
                 });
 
-                navigate(`/post/${createdPost.$id}`);
+                dispatch(addPost(createdPost));
+                navigate(`/`);
+
+                // navigate(`/post/${createdPost.$id}`);
             } catch (err) {
                 setError(err.message || "Something went wrong");
             }

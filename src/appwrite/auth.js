@@ -21,8 +21,11 @@ export class AuthService{
             const userAccount = await this.account.create(ID.unique(),email,password,name);
             if (userAccount) {
                 //call login
+                console.log("Account created: ",userAccount);
+                console.log("Email & password: ",email, password);
+                
+               return login(email,password);
 
-                this.login(email,password);
 
             } else {
                 return userAccount;
@@ -38,6 +41,9 @@ export class AuthService{
         return await this.account.createEmailPasswordSession(email,password);
     }
 
+    async getJWT(){
+        return await this.account.createJWT();
+    }
 
     async getCurrentUser(){
 
